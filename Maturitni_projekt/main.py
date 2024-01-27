@@ -19,7 +19,6 @@ class Main():
         self.score = Score()
         self.preview = Preview()
         
-
     def run(self):
         while RUNNING:
             for event in pygame.event.get():
