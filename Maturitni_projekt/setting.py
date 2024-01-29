@@ -20,33 +20,33 @@ WINDOW_WIDTH = (GAME_WIDTH + SIDEBAR_WIDTH + PADDING * 3)
 WINDOW_HEIGHT = GAME_HEIGHT + PADDING * 2
 
 # game behaviour 
-UPDATE_START_SPEED = 700
-MOVE_WAIT_TIME = 100
+MOVE_DOWN_SPEED_WAIT = 600
+PLAYER_MOVE_WAIT_TIME = 100
 ROTATE_WAIT_TIME = 200
 BLOCK_OFFSET = pygame.Vector2(COLS // 2, -1)
 
 # Colors 
-YELLOW = '#f1e60d'
-RED = '#e51b20'
-BLUE = '#204b9b'
-GREEN = '#65b32e'
-PURPLE = '#7b217f'
-CYAN = '#6cc6d9'
-ORANGE = '#f07e13'
-GRAY = '#1C1C1C'
+YELLOW = "#f1e60d"
+RED = "#e51b20"
+BLUE = "#204b9b"
+GREEN = "#65b32e"
+PURPLE = "#7b217f"
+CYAN = "#6cc6d9"
+ORANGE = "#f07e13"
+GRAY = "#1C1C1C"
 LINE_COLOR = pygame.Color(20, 20,50, 255)
 BG_COLOR = (0,0,0)
 
 # shapes
 PIECES = {
-	'T': {'shape': [(0,0), (-1,0), (1,0), (0,-1)], 'color': PURPLE},
-	'O': {'shape': [(0,0), (0,-1), (1,0), (1,-1)], 'color': YELLOW},
-	'J': {'shape': [(0,0), (0,-1), (0,1), (-1,1)], 'color': BLUE},
-	'L': {'shape': [(0,0), (0,-1), (0,1), (1,1)], 'color': ORANGE},
-	'I': {'shape': [(0,0), (0,-1), (0,-2), (0,1)], 'color': CYAN},
-	'S': {'shape': [(0,0), (-1,0), (0,-1), (1,-1)], 'color': GREEN},
-	'Z': {'shape': [(0,0), (1,0), (0,-1), (-1,-1)], 'color': RED},
-    'C': {'shape': [(0,0), (-1,0), (-1,-1), (1,0), (1,-1)], 'color': YELLOW}
+	"T": {"shape": [(0,0), (-1,0), (1,0), (0,-1)], "color": PURPLE},
+	"O": {"shape": [(0,0), (0,-1), (1,0), (1,-1)], "color": YELLOW},
+	"J": {"shape": [(0,0), (0,-1), (0,1), (-1,1)], "color": BLUE},
+	"L": {"shape": [(0,0), (0,-1), (0,1), (1,1)], "color": ORANGE},
+	"I": {"shape": [(0,0), (0,-1), (0,-2), (0,1)], "color": CYAN},
+	"S": {"shape": [(0,0), (-1,0), (0,-1), (1,-1)], "color": GREEN},
+	"Z": {"shape": [(0,0), (1,0), (0,-1), (-1,-1)], "color": RED},
+    "C": {"shape": [(0,0), (-1,0), (-1,-1), (1,0), (1,-1)], "color": YELLOW}
 }
 
 SCORE_DATA = {1: 40, 2: 100, 3: 300, 4: 1200}
