@@ -37,6 +37,6 @@ class Main():
 
             self.clock.tick()
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main = Main()
     main.run()
