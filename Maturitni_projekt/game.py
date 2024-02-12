@@ -12,8 +12,6 @@ class Game:
 
         
         self.field_data = [[0 for x in range(COLS)] for y in range(ROWS)]
-        # for row in self.field_data:
-        #     print(row)
 
         # create random starting piece
         self.shape = random.choice(list(PIECES.keys()))
@@ -35,6 +33,7 @@ class Game:
 
         self.shape = random.choice(list(PIECES.keys()))
         self.piece = Piece(self.shape, self.sprites, self.spawn_new_piece, self.field_data)
+        print(self.shape)
 
 
     def timer_update(self):
@@ -98,7 +97,6 @@ class Game:
             if keys[pygame.K_UP]:
                 self.piece.rotate()
                 self.timers["rotate"].activate()
-                print("rotated")
 
     def run(self):
 
@@ -157,10 +155,19 @@ class Piece:
         if self.shape != "O":
             # pivot point
             pivot_point = self.blocks[0].position
-            for block in self.blocks: 
-                block.rotate(pivot_point)
-
-
+            
+            new_block_pos = [block.rotate(pivot_point) for block in self.blocks]
+            
+            for pos in new_block_pos:
+                if pos.x >= COLS or pos.x < 0 or pos.y > ROWS-1:
+                    return
+                
+                if self.field_data[int(pos.y)][int(pos.x)]:
+                    return
+                
+            for i, block in enumerate(self.blocks):
+                block.position = new_block_pos[i]
+                
 class Block(pygame.sprite.Sprite):
     def __init__(self, groups, position, color):
         super().__init__(groups)
@@ -174,15 +181,8 @@ class Block(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = (x, y))
 
     def rotate(self, pivot_point):
-        self.pivot_point = pivot_point
-        x = self.position.x - self.pivot_point.x
-        y = self.position.y - self.pivot_point.y
-
-        new_x = -y
-        new_y = x
-
-        self.position.x = new_x + self.pivot_point.y
-        self.position.y = new_y + self.pivot_point.x
+        rotate_position = pivot_point + (self.position - pivot_point).rotate(90)
+        return rotate_position
 
     def horizontal_collision(self, x_pos, field_data):
         if not 0 <= x_pos < COLS:
