@@ -10,13 +10,13 @@ GAME_WIDTH = COLS * CELL_SIZE
 GAME_HEIGHT =  ROWS * CELL_SIZE
 
 # side bar size 
-SIDEBAR_WIDTH = 200
+SIDEBAR_WIDTH = 200 
 PREVIEW_HEIGHT = 0.7
 SCORE_HEIGHT = 1 - PREVIEW_HEIGHT
 
 # window
 PADDING = 20
-WINDOW_WIDTH = (GAME_WIDTH + SIDEBAR_WIDTH + PADDING * 3)
+WINDOW_WIDTH = (GAME_WIDTH + SIDEBAR_WIDTH + PADDING * 3) 
 WINDOW_HEIGHT = GAME_HEIGHT + PADDING * 2
 
 # game behaviour 
@@ -47,7 +47,10 @@ PIECES = {
 	"I": {"shape": [(0,0), (0,-1), (0,1), (0,2)], "color": CYAN},
 	"S": {"shape": [(0,0), (-1,0), (0,-1), (1,-1)], "color": GREEN},
 	"Z": {"shape": [(0,0), (1,0), (0,-1), (-1,-1)], "color": RED},
-    "C": {"shape": [(0,0), (-1,0), (-1,-1), (1,0), (1,-1)], "color": LIGHT_GREEN}
+    "C": {"shape": [(0,0), (-1,0), (-1,-1), (1,0), (1,-1)], "color": LIGHT_GREEN},
+    "H": {"shape": [(0,0), (-1,0), (-1,1), (-1,-1), (1,0), (1,1), (1,-1)], "color": RED},
+    ".": {"shape": [(0,0)], "color": BLUE},
+    "+": {"shape": [(0,0), (-1,0), (1,0), (0,1), (0,-1)], "color": YELLOW}
 }
 
 SCORE_DATA = {1: 40, 2: 100, 3: 300, 4: 1200}
