@@ -10,14 +10,12 @@ class Game:
         self.rect = self.surface.get_rect(topleft = (PADDING,PADDING))
         self.sprites = pygame.sprite.Group()
 
-        
         self.field_data = [[0 for x in range(COLS)] for y in range(ROWS)]
-
         # create random starting piece
         self.shape = random.choice(list(PIECES.keys()))
         self.piece = Piece(self.shape, self.sprites, self.spawn_new_piece, self.field_data)
         print(self.shape)
-
+ 
         # timer
         self.timers = {
             "vertical_move": Timer(MOVE_DOWN_SPEED_WAIT, True, self.move_down),
@@ -28,7 +26,6 @@ class Game:
         self.timers["vertical_move"].activate()
 
     def spawn_new_piece(self):
-
         self.check_clear_rows()
 
         self.shape = random.choice(list(PIECES.keys()))
@@ -152,21 +149,20 @@ class Piece:
                 block.position.x += amount
     
     def rotate(self):
-        if self.shape != "O":
-            # pivot point
+        if self.shape not in ["O", ".", "+"]:
             pivot_point = self.blocks[0].position
-            
-            new_block_pos = [block.rotate(pivot_point) for block in self.blocks]
-            
+            new_block_pos = [pivot_point + (block.position - pivot_point).rotate(90) for block in self.blocks]
+
             for pos in new_block_pos:
-                if pos.x >= COLS or pos.x < 0 or pos.y > ROWS-1:
-                    return
-                
-                if self.field_data[int(pos.y)][int(pos.x)]:
-                    return
-                
+                for i, block in enumerate(self.blocks):
+                    if pos.x >= COLS or pos.x < 0 or pos.y > ROWS-1:
+                        block.position = new_block_pos[i]
+                        return
+
+                    if self.field_data[int(pos.y)][int(pos.x)]:
+                        return
             for i, block in enumerate(self.blocks):
-                block.position = new_block_pos[i]
+                    block.position = new_block_pos[i]
                 
 class Block(pygame.sprite.Sprite):
     def __init__(self, groups, position, color):
@@ -180,9 +176,9 @@ class Block(pygame.sprite.Sprite):
         y = self.position.y * CELL_SIZE 
         self.rect = self.image.get_rect(topleft = (x, y))
 
-    def rotate(self, pivot_point):
-        rotate_position = pivot_point + (self.position - pivot_point).rotate(90)
-        return rotate_position
+    # def rotate(self, pivot_point):
+    #     rotate_position = pivot_point + (self.position - pivot_point).rotate(90)
+    #     return rotate_position
 
     def horizontal_collision(self, x_pos, field_data):
         if not 0 <= x_pos < COLS:
