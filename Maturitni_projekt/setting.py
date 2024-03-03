@@ -26,6 +26,7 @@ ROTATE_WAIT_TIME = 200
 BLOCK_OFFSET = pygame.Vector2(COLS // 2, -1)
 
 # Colors 
+WHITE = (255, 255, 255)
 YELLOW = "#f1e60d"
 RED = "#e51b20"
 BLUE = "#0D78FF"
