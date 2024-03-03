@@ -8,3 +8,4 @@ class Preview:
     
     def run(self):
         self.display_surface.blit(self.surface, self.rect)
+        pygame.draw.rect(self.display_surface, LINE_COLOR, self.rect, 3, -1)
