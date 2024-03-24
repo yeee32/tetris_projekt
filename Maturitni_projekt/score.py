@@ -4,7 +4,7 @@ import os
 class Score:
     def __init__(self):
 
-        # info about what to display as score
+        # info about what to display on the score tab
         self.curr_score = 0
         self.level = 1
         self.lines = 0
@@ -15,7 +15,7 @@ class Score:
         self.display_surface = pygame.display.get_surface()
 
         # font
-        self.font = pygame.font.Font(os.path.join("graphics","Russo_One.ttf"), 30)
+        self.font = pygame.font.Font(os.path.join("Maturitni_projekt","graphics","Russo_One.ttf"), 25)
 
         self.increment_height = self.surface.get_height() / 3
     
