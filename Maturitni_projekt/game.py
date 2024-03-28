@@ -22,6 +22,7 @@ class Game:
         
         self.get_next_shape = get_next_shape
         self.update_score = update_score
+
         self.field_data = [[0 for x in range(COLS)] for y in range(ROWS)]
         # create random starting piece
         self.shape = random.choice(list(PIECES.keys()))
@@ -48,22 +49,19 @@ class Game:
         # for every 10 lines cleared the level will increase by 1
         if self.curr_lines_cleared / 10 > self.curr_level :
             self.curr_level += 1
-            self.drop_speed += 0.25
+            self.drop_speed += 0.5
         self.update_score(self.curr_lines_cleared, self.curr_score, self.curr_level)
 
     def spawn_new_piece(self):
         
         self.block_place_sound.play()
-
-        self.game_over() # game over check... is kinda broken
+        self.game_over() # game over check... is kinda broken           
         self.check_clear_rows()
 
         self.shape = self.get_next_shape()
         
         self.piece = Piece(self.shape, self.sprites, self.spawn_new_piece, self.field_data)
         print(self.shape)
-
-        
         
     def timer_update(self):
         for timer in self.timers.values():
@@ -116,16 +114,17 @@ class Game:
             if keys[pygame.K_RIGHT]:
                 self.piece.move_horizontaly(1)
                 self.timers["horizontal_move"].activate()
-                print("--->")
+                # print("--->")
 
             elif keys[pygame.K_LEFT]:
                 self.piece.move_horizontaly(-1)
                 self.timers["horizontal_move"].activate()
-                print("<---")
+                # print("<---")
 
             elif keys[pygame.K_SPACE]: # funguje ??
                 self.piece.drop()
                 self.timers["horizontal_move"].activate()
+                self.timers["rotate"].activate()
                     
         # rotate
         if self.timers["rotate"].is_active == False:
@@ -135,7 +134,7 @@ class Game:
                 
                 self.timers["rotate"].activate()
 
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] and not keys[pygame.K_SPACE]:
             self.drop_speed_multiplier = 7 * self.drop_speed # increase the drop speed when down arrow is pressed
         else:
             self.drop_speed_multiplier = self.drop_speed # reset to normal drop speed
@@ -162,10 +161,14 @@ class Game:
         for block in self.piece.blocks:
             if block.position.y < 0:
                 print("GAME OVER")
+                pygame.time.wait(500)
                 return True
+                # pygame.quit
+                # sys.exit()
+
         return False
 class Piece:
-    def __init__(self, shape, group, spawn_new_piece, field_data):
+    def __init__(self, shape, group, spawn_new_piece, field_data, current = True):
         self.shape = shape
         self.block_pos = PIECES[shape]["shape"]
         self.block_color = PIECES[shape]["color"]
@@ -215,28 +218,55 @@ class Piece:
                 block.position.x += amount
     
     def rotate(self):
-        if self.shape not in ["O", ".", "+"]:
+        if self.shape not in ["O", "DOT", "PLUS"]:
+            self.num = 1
+            if self.shape == "I":
+                self.num = 2
+            print(self.num)
             pivot_point = self.blocks[0].position
-            
-            new_block_pos = [pivot_point + (block.position - pivot_point).rotate(45) for block in self.blocks]
+
+            new_block_pos = [pivot_point + (block.position - pivot_point).rotate(90) for block in self.blocks]
 
             for position in new_block_pos:
-                    # horizontal collision check
-                if position.x >= COLS:
-                    return
 
-                elif position.x < 0:
-                    return
-                
-                elif position.y > ROWS:
-                    return
-
-                    # vertical collision check
-                if self.field_data[int(position.y)][int(position.x)]:
+                if position.y >= ROWS:
                     return
                 
             for i, block in enumerate(self.blocks):
-                    block.position = new_block_pos[i]
+                block.position = new_block_pos[i]
+
+            for position in new_block_pos:
+                    # horizontal collision check
+                if position.x >= COLS and not self.horizontal_collision_on_next_move(self.blocks, -self.num):
+                    if self.shape != "I":
+                        self.move_horizontaly(-1)
+                    else:
+                        self.move_horizontaly(-2)
+                    return
+                
+                elif position.x < 0 and not self.horizontal_collision_on_next_move(self.blocks, self.num):
+                    if self.shape != "I":
+                        self.move_horizontaly(1)
+                    else:
+                        self.move_horizontaly(2)
+                    return
+  
+                if self.field_data[int(position.y)][int(position.x)] and not self.horizontal_collision_on_next_move(self.blocks, 1):
+                    if position.x >= COLS // 2:
+                        if self.shape != "I":
+                            self.move_horizontaly(-1)
+                        else:
+                            self.move_horizontaly(-2)
+                        # return
+                    else:
+                        if self.shape != "I":
+                            self.move_horizontaly(1)
+                        else:
+                            self.move_horizontaly(2)
+                    return
+            
+                
+            
             
             self.rotate_sound.play()
                 
