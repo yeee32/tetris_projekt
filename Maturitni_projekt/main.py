@@ -20,9 +20,6 @@ class Main():
         self.next_shapes = [random.choice(list(PIECES.keys())) for shape in range(3)]
         print(self.next_shapes)
 
-        # buttons imgs
-        self.start_button_img = pygame.image.load(os.path.join("Maturitni_projekt","graphics" ,"start_button_img.png")).convert_alpha
-
         # components 
         self.game = Game(self.get_next_shape, self.update_score)
         self.score = Score()
