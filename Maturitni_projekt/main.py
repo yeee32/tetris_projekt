@@ -25,7 +25,9 @@ class Main:
         self.preview = Preview()
         
         # music
-        self.music = pygame.mixer.music.load(os.path.join("Maturitni_projekt", "sfx", "shitty_music.wav"))
+        self.music = os.path.join("Maturitni_projekt", "sfx", "shitty_music.wav")
+        self.main_menu_music = os.path.join("Maturitni_projekt", "sfx", "main_menu_music.wav")
+        self.game_over_music = os.path.join("Maturitni_projekt", "sfx", "game_over_music.wav")
 
         # background 
         self.background_image = pygame.image.load(os.path.join("Maturitni_projekt", "graphics", "background.png"))
@@ -53,6 +55,8 @@ class Main:
     def main_menu(self):
         click = False
         self.running = True
+        pygame.mixer.music.load(self.main_menu_music)
+        pygame.mixer.music.play(-1)
         
         pygame.display.set_caption("MAIN MENU")
         while self.running:
@@ -66,6 +70,7 @@ class Main:
 
             if self.start_button.collidepoint((self.mouse_x, self.mouse_y)):
                 if click == True:
+                    pygame.mixer.music.load(self.music)
                     pygame.mixer.music.play(-1)
                     main.run()
             if self.quit_button.collidepoint((self.mouse_x, self.mouse_y)):
@@ -158,7 +163,8 @@ class Main:
     
     def game_over_menu(self):
         click = False
-        pygame.mixer.music.stop()
+        pygame.mixer.music.load(self.game_over_music)
+        pygame.mixer.music.play(-1)
         self.display_surface.fill(BG_COLOR)
         self.running = True
         self.show_game_over_menu = True
