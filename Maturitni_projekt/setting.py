@@ -1,15 +1,17 @@
 import pygame 
 
-RUNNING = True
-
 # Game size 
 COLS = 10
 ROWS = 20
 CELL_SIZE = 35
-GAME_WIDTH = COLS * CELL_SIZE
-GAME_HEIGHT =  ROWS * CELL_SIZE
+GAME_WIDTH = COLS * CELL_SIZE # 350
+GAME_HEIGHT =  ROWS * CELL_SIZE # 700
 
-FPS = 60
+FPS = 120
+
+# buttons
+BUTTON_WIDTH = 300
+BUTTON_HEIGHT = 75
 
 # side bar size 
 SIDEBAR_WIDTH = 200 
@@ -18,13 +20,13 @@ SCORE_HEIGHT = 1 - PREVIEW_HEIGHT
 
 # window
 PADDING = 20
-WINDOW_WIDTH = (GAME_WIDTH + SIDEBAR_WIDTH + PADDING * 3) 
-WINDOW_HEIGHT = GAME_HEIGHT + PADDING * 2
+WINDOW_WIDTH = (GAME_WIDTH + SIDEBAR_WIDTH + PADDING * 3) # 610
+WINDOW_HEIGHT = GAME_HEIGHT + PADDING * 2  # 740
 
 # game behaviour 
 MOVE_DOWN_SPEED_WAIT = 500
-PLAYER_MOVE_WAIT_TIME = 110
-ROTATE_WAIT_TIME = 250
+PLAYER_MOVE_WAIT_TIME = 100
+ROTATE_WAIT_TIME = 225
 BLOCK_OFFSET = pygame.Vector2(COLS // 2, -1)
 
 PREVIEW_BLOCK_OFFSET = pygame.Vector2(COLS * 1.5, 30)
@@ -56,13 +58,13 @@ PIECES = {
 	"O": {"shape": [(0,0), (0,-1), (1,0), (1,-1)], "color": CYAN},
 	"J": {"shape": [(0,0), (0,-1), (0,1), (-1,1)], "color": GREEN},
 	"L": {"shape": [(0,0), (0,-1), (0,1), (1,1)], "color": PINK},
-	"I": {"shape": [(0,0), (0,-1), (0,1), (0,-2)], "color": YELLOW},
+	"I": {"shape": [(0,0), (0,-1), (0,1), (0,2)], "color": YELLOW},
 	"S": {"shape": [(0,0), (-1,0), (0,-1), (1,-1)], "color": BLUE},
 	"Z": {"shape": [(0,0), (1,0), (0,-1), (-1,-1)], "color": PURPLE},
     "C": {"shape": [(0,0), (-1,0), (-1,-1), (1,0), (1,-1)], "color": LIGHT_GREEN},
-    "P": {"shape": [(0,0), (-1,0), (1,0), (0,-1),(1,-1)], "color": DARK_RED},
-    "q": {"shape": [(0,0), (-1,0), (1,0), (0,-1),(-1,-1)], "color": DARK_GREEN},
-    "DOT": {"shape": [(0,0)], "color": ORANGE},
+    "q": {"shape": [(0,0), (-1,0), (1,0), (0,-1),(1,-1)], "color": DARK_RED},
+    "P": {"shape": [(0,0), (-1,0), (1,0), (0,-1),(-1,-1)], "color": DARK_GREEN},
+    "DOT": {"shape": [(0,0)], "color": DARK_GREEN},
     "PLUS": {"shape": [(0,0), (-1,0), (1,0), (0,1), (0,-1)], "color": BROWN}
 }
 
