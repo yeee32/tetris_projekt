@@ -1,17 +1,16 @@
 from setting import *
 import random
 from timerr import Timer
-import sys
 import os
 
-
 class Game:
-    def __init__(self, get_next_shape, update_score):
+    def __init__(self, get_next_shape, update_score, game_over_check):
 
         self.surface = pygame.Surface((GAME_WIDTH, GAME_HEIGHT))
         self.display_surface = pygame.display.get_surface()
         self.rect = self.surface.get_rect(topleft = (PADDING,PADDING))
         self.sprites = pygame.sprite.Group()
+        self.game_over_check = game_over_check
 
         self.drop_speed_multiplier = 1
         self.drop_speed = 1
@@ -19,7 +18,8 @@ class Game:
         # sound effects
         self.clear_row_sound = pygame.mixer.Sound(os.path.join("Maturitni_projekt", "sfx","clear_row_sound.wav"))
         self.block_place_sound = pygame.mixer.Sound(os.path.join("Maturitni_projekt", "sfx","block_place_sound.wav"))
-        
+        self.game_over_sound = pygame.mixer.Sound(os.path.join("Maturitni_projekt", "sfx","game_over_sound.wav"))
+
         self.get_next_shape = get_next_shape
         self.update_score = update_score
         self.field_data = [[0 for x in range(COLS)] for y in range(ROWS)]
@@ -52,18 +52,13 @@ class Game:
         self.update_score(self.curr_lines_cleared, self.curr_score, self.curr_level)
 
     def spawn_new_piece(self):
-        
         self.block_place_sound.play()
-
-        self.game_over() # game over check... is kinda broken
+        self.game_over()
         self.check_clear_rows()
 
         self.shape = self.get_next_shape()
-        
+            
         self.piece = Piece(self.shape, self.sprites, self.spawn_new_piece, self.field_data)
-        print(self.shape)
-
-        
         
     def timer_update(self):
         for timer in self.timers.values():
@@ -104,7 +99,7 @@ class Game:
                 self.field_data[int(block.position.y)][int(block.position.x)] = block
 
             self.clear_row_sound.play()
-        # update score
+             # update score
             self.score_calc(len(cleared_rows))
         
     def player_input(self):
@@ -116,17 +111,16 @@ class Game:
             if keys[pygame.K_RIGHT]:
                 self.piece.move_horizontaly(1)
                 self.timers["horizontal_move"].activate()
-                print("--->")
 
-            elif keys[pygame.K_LEFT]:
+            if keys[pygame.K_LEFT]:
                 self.piece.move_horizontaly(-1)
                 self.timers["horizontal_move"].activate()
-                print("<---")
 
-            elif keys[pygame.K_SPACE]: # funguje ??
+            if keys[pygame.K_SPACE] and not self.spacebar_pressed: # funguje ??
                 self.piece.drop()
-                self.timers["horizontal_move"].activate()
-                    
+                self.spacebar_pressed = True
+            elif not keys[pygame.K_SPACE]:
+                self.spacebar_pressed = False
         # rotate
         if self.timers["rotate"].is_active == False:
 
@@ -135,7 +129,7 @@ class Game:
                 
                 self.timers["rotate"].activate()
 
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] and not keys[pygame.K_SPACE]:
             self.drop_speed_multiplier = 7 * self.drop_speed # increase the drop speed when down arrow is pressed
         else:
             self.drop_speed_multiplier = self.drop_speed # reset to normal drop speed
@@ -158,12 +152,40 @@ class Game:
 
         self.grid_outline = pygame.draw.rect(self.display_surface, (LINE_COLOR), self.rect, 3, -1)
 
+    def reset_game(self):
+        # reset field data
+        self.field_data = [[0 for x in range(COLS)] for y in range(ROWS)]
+        
+        # clear all blocks
+        self.sprites.empty()
+
+        # reset the score values
+        self.curr_level = 1
+        self.curr_score = 0
+        self.curr_lines_cleared = 0 
+        
+        # reset drop speed
+        self.drop_speed_multiplier = 1
+        self.drop_speed = 1
+        
+        # reset next shape
+        self.shape = random.choice(list(PIECES.keys()))
+        self.piece = Piece(self.shape, self.sprites, self.spawn_new_piece, self.field_data)
+        
+
+        # generate new random shapes for next pieces preview
+        self.get_next_shape()
+
+        self.update_score(0, 0, 1)
+    
+
     def game_over(self):
         for block in self.piece.blocks:
-            if block.position.y < 0:
-                print("GAME OVER")
-                return True
-        return False
+            if block.position.y <= 0:
+                self.game_over_sound.play()
+                self.reset_game()
+                self.game_over_check()
+
 class Piece:
     def __init__(self, shape, group, spawn_new_piece, field_data):
         self.shape = shape
@@ -200,6 +222,7 @@ class Piece:
         for block in self.blocks:
             self.field_data[int(block.position.y)][int(block.position.x)] = block
 
+        self.spawn_new_piece()
     def move_down(self):
         if not self.down_collision_on_next_move(self.blocks, 1):
             for block in self.blocks:
@@ -215,10 +238,10 @@ class Piece:
                 block.position.x += amount
     
     def rotate(self):
-        if self.shape not in ["O", ".", "+"]:
+        if self.shape not in ["O", "DOT", "PLUS"]:
             pivot_point = self.blocks[0].position
             
-            new_block_pos = [pivot_point + (block.position - pivot_point).rotate(45) for block in self.blocks]
+            new_block_pos = [pivot_point + (block.position - pivot_point).rotate(90) for block in self.blocks]
 
             for position in new_block_pos:
                     # horizontal collision check
@@ -254,22 +277,17 @@ class Block(pygame.sprite.Sprite):
 
     def horizontal_collision(self, x_pos, field_data):
         if not 0 <= x_pos < COLS:
-            # print("wall collision")
             return True
         
         if field_data[int(self.position.y)][x_pos]:
-            # print("block collision 1")
             return True
 
     def down_collision(self, y_pos, field_data):
         if y_pos >= ROWS:
-            # print("down collision")
             return True
         
         if y_pos >= 0 and field_data[y_pos][int(self.position.x)]:
-            # print("block collision 2")
             return True
 
     def update(self):
-        # print(self.position)
         self.rect.topleft = self.position * CELL_SIZE
