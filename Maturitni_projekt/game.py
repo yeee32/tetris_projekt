@@ -84,6 +84,7 @@ class Game:
             if all(row):
                 cleared_rows.append(i)
         if cleared_rows:
+            
             for clear_row_index in cleared_rows:
                 # delete the block
                 for block in self.field_data[clear_row_index]:
@@ -93,7 +94,7 @@ class Game:
                     for block in row:
                         if block and block.position.y < clear_row_index:
                             block.position.y += 1
-        
+            
             self.field_data = [[0 for x in range(COLS)] for y in range(ROWS)]
             for block in self.sprites:
                 self.field_data[int(block.position.y)][int(block.position.x)] = block
@@ -108,11 +109,11 @@ class Game:
         # move 
         if self.timers["horizontal_move"].is_active == False:
 
-            if keys[pygame.K_RIGHT]:
+            if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
                 self.piece.move_horizontaly(1)
                 self.timers["horizontal_move"].activate()
 
-            if keys[pygame.K_LEFT]:
+            if keys[pygame.K_LEFT] or keys[pygame.K_a]:
                 self.piece.move_horizontaly(-1)
                 self.timers["horizontal_move"].activate()
 
@@ -124,12 +125,12 @@ class Game:
         # rotate
         if self.timers["rotate"].is_active == False:
 
-            if keys[pygame.K_UP]:
+            if keys[pygame.K_UP] or keys[pygame.K_w]:
                 self.piece.rotate()
                 
                 self.timers["rotate"].activate()
 
-        if keys[pygame.K_DOWN] and not keys[pygame.K_SPACE]:
+        if keys[pygame.K_DOWN] or keys[pygame.K_s] and not keys[pygame.K_SPACE]:
             self.drop_speed_multiplier = 7 * self.drop_speed # increase the drop speed when down arrow is pressed
         else:
             self.drop_speed_multiplier = self.drop_speed # reset to normal drop speed
@@ -174,17 +175,22 @@ class Game:
         
 
         # generate new random shapes for next pieces preview
+        self.next_pieces = [random.choice(list(PIECES.keys())) for shape in range(3)]
         self.get_next_shape()
 
         self.update_score(0, 0, 1)
-    
 
     def game_over(self):
+        self.final_score = 0
         for block in self.piece.blocks:
-            if block.position.y <= 0:
+            if block.position.y <= -1:
                 self.game_over_sound.play()
+                self.final_score = self.curr_score
                 self.reset_game()
+                pygame.time.wait(250)
+                
                 self.game_over_check()
+                return self.final_score
 
 class Piece:
     def __init__(self, shape, group, spawn_new_piece, field_data):
