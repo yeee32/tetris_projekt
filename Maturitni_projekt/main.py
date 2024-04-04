@@ -94,7 +94,10 @@ class Main:
                         self.running = False
                         pygame.quit()
                         sys.exit()
-                        
+                    if event.key == pygame.K_RETURN: # enter
+                        pygame.mixer.music.load(self.music)
+                        pygame.mixer.music.play(-1)
+                        main.run()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         click = True
@@ -128,9 +131,8 @@ class Main:
                 if click == True:
                     self.game.reset_game()
                     self.running = False
-                    self.main_menu()
-                    
-                    
+                    main.main_menu()
+         
             if self.quit_button.collidepoint((self.mouse_x, self.mouse_y)):
                 if click == True:
                     self.running = False
@@ -152,7 +154,7 @@ class Main:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         pygame.mixer.music.unpause()
-                        self.run()
+                        main.run()
                         self.running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -168,11 +170,17 @@ class Main:
         self.display_surface.fill(BG_COLOR)
         self.running = True
         self.show_game_over_menu = True
-        
+        print(self.game.final_score)
+
+        self.font = pygame.font.Font(os.path.join("Maturitni_projekt","graphics","PublicPixel.ttf"), 35)
+        self.text = self.font.render(f"SCORE:{self.game.final_score}", True, WHITE)
+        self.text_rect = self.text.get_rect(center = (WINDOW_WIDTH/2, 185))
+
         pygame.display.set_caption("GAME OVER")
         while self.running:
             
-            self.display_surface.blit(self.game_background_image, (0,0))
+            self.display_surface.blit(self.game_over_image, (0,0))
+            self.display_surface.blit(self.text, self.text_rect)
             self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
 
             self.main_menu_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 225, BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -203,6 +211,9 @@ class Main:
                         self.running = False
                         pygame.quit()
                         sys.exit()
+                    if event.key == pygame.K_RETURN:
+                        self.game_over_menu = False
+                        main.main_menu()
                         
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -215,7 +226,6 @@ class Main:
         
         self.running = True
         pygame.display.set_caption("TETRIS")
-        pygame.mixer.music.set_volume(10)
         
         while self.running: 
             self.display_surface.fill(BG_COLOR)
@@ -235,8 +245,7 @@ class Main:
 
             pygame.display.update()
             self.clock.tick(FPS)  
-        
-            
+ 
 if __name__ == "__main__":
     main = Main()  
     main.main_menu()
