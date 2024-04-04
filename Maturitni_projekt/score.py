@@ -15,7 +15,7 @@ class Score:
         self.display_surface = pygame.display.get_surface()
 
         # font
-        self.font = pygame.font.Font(os.path.join("Maturitni_projekt","graphics","Russo_One.ttf"), 25)
+        self.font = pygame.font.Font(os.path.join("Maturitni_projekt","graphics","PublicPixel.ttf"), 18)
 
         self.increment_height = self.surface.get_height() / 3
     
@@ -27,7 +27,7 @@ class Score:
     def run(self):
         self.surface.fill(BG_COLOR)
         
-        for i, text in enumerate([("score", self.curr_score), ("level", self.level), ("lines", self.lines)]):
+        for i, text in enumerate([("SCORE", self.curr_score), ("LEVEL", self.level), ("LINES", self.lines)]):
             x = self.surface.get_width()/2
             y = (self.increment_height / 2) + i * self.increment_height
 
