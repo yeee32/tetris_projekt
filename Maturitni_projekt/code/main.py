@@ -54,12 +54,11 @@ class Main:
     
     def main_menu(self):
         click = False
-        self.running = True
         pygame.mixer.music.load(self.main_menu_music)
         pygame.mixer.music.play(-1)
         
         pygame.display.set_caption("MAIN MENU")
-        while self.running:
+        while RUNNING:
             self.display_surface.fill((BG_COLOR))
             
             self.display_surface.blit(self.background_image, (0,0))
@@ -110,10 +109,9 @@ class Main:
         click = False
         pygame.mixer.music.pause()
         self.display_surface.fill(BG_COLOR)
-        self.running = True
         pygame.display.set_caption("PAUSE")
 
-        while self.running: 
+        while RUNNING: 
             self.display_surface.fill(BG_COLOR)
             self.display_surface.blit(self.pause_menu_image, (0,0))
             self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
@@ -156,7 +154,6 @@ class Main:
                     if event.key == pygame.K_ESCAPE:
                         pygame.mixer.music.unpause()
                         main.run()
-                        self.running = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         click = True
@@ -169,7 +166,6 @@ class Main:
         pygame.mixer.music.load(self.game_over_music)
         pygame.mixer.music.play(-1)
         self.display_surface.fill(BG_COLOR)
-        self.running = True
         self.show_game_over_menu = True
 
         self.font = pygame.font.Font(os.path.join("..","graphics","PublicPixel.ttf"), 35)
@@ -177,7 +173,7 @@ class Main:
         self.text_rect = self.text.get_rect(center = (WINDOW_WIDTH/2, 185))
 
         pygame.display.set_caption("GAME OVER")
-        while self.running:
+        while RUNNING:
             
             self.display_surface.blit(self.game_over_image, (0,0))
             self.display_surface.blit(self.text, self.text_rect)
@@ -208,7 +204,6 @@ class Main:
 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
-                        self.running = False
                         pygame.quit()
                         sys.exit()
                     if event.key == pygame.K_RETURN:
@@ -223,11 +218,9 @@ class Main:
             self.clock.tick(FPS)
 
     def run(self):
-        
-        self.running = True
         pygame.display.set_caption("TETRIS")
         
-        while self.running: 
+        while RUNNING: 
             self.display_surface.fill(BG_COLOR)
             self.display_surface.blit(self.game_background_image, (0,0))
             for event in pygame.event.get():
