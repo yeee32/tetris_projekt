@@ -15,7 +15,7 @@ class Score:
         self.display_surface = pygame.display.get_surface()
 
         # font
-        self.font = pygame.font.Font(os.path.join("..","graphics","pixeboy.ttf"), 35)
+        self.font = pygame.font.Font(os.path.join("..","graphics", "fonts","pixeboy.ttf"), 35)
 
         self.increment_height = self.surface.get_height() / 3
     
