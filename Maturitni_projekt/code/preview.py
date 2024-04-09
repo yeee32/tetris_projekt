@@ -8,7 +8,7 @@ class Preview:
         self.display_surface = pygame.display.get_surface()
 
         # pieces
-        self.shape_graphics = {shape: pygame.image.load(os.path.join("Maturitni_projekt", "graphics", f"{shape}.png")).convert_alpha() for shape in PIECES.keys()}
+        self.shape_graphics = {shape: pygame.image.load(os.path.join("..", "graphics", f"{shape}.png")).convert_alpha() for shape in PIECES.keys()}
 
         self.piece_preview_height = self.surface.get_height() / 3
 
