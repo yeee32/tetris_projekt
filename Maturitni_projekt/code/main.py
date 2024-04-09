@@ -29,17 +29,20 @@ class Main:
         self.game_over_music = os.path.join("..", "sfx", "game_over_music.wav")
 
         # backgrounds
-        self.background_image = pygame.image.load(os.path.join("..", "graphics", "background.png"))
-        self.game_over_image = pygame.image.load(os.path.join("..", "graphics", "game_over.png"))
-        self.game_background_image = pygame.image.load(os.path.join("..", "graphics", "game_bg.png"))
-        self.pause_menu_image = pygame.image.load(os.path.join("..", "graphics", "pause_menu.png"))
+        self.background_image = pygame.image.load(os.path.join("..", "graphics", "backgrounds", "background.png"))
+        self.game_over_image = pygame.image.load(os.path.join("..", "graphics", "backgrounds", "game_over.png"))
+        self.game_background_image = pygame.image.load(os.path.join("..", "graphics", "backgrounds", "game_bg.png"))
+        self.pause_menu_image = pygame.image.load(os.path.join("..", "graphics", "backgrounds", "pause_menu.png"))
         
         # buttons
-        self.start_button_img = pygame.image.load(os.path.join("..", "graphics", "start_buton.png"))
-        self.quit_button_img = pygame.image.load(os.path.join("..", "graphics", "quit_button.png"))
-        self.continue_button_img = pygame.image.load(os.path.join("..", "graphics", "continue.png" ))
-        self.menu_button_img = pygame.image.load(os.path.join("..", "graphics", "menu_button.png" ))
-        self.option_button_img = pygame.image.load(os.path.join("..", "graphics", "options_button_img.png" ))
+        self.start_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "start_buton.png"))
+        self.quit_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "quit_button.png"))
+        self.continue_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons", "continue.png" ))
+        self.menu_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "menu_button.png" ))
+        self.option_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "options_button_img.png" ))
+
+        # fonts
+        self.pixel_font = os.path.join("..", "graphics", "fonts", "PublicPixel.ttf")
 
     def update_score(self, lines, curr_score, level):
         self.score.lines = lines
@@ -55,7 +58,7 @@ class Main:
     
     def option_menu(self):
         click = False
-        self.font = pygame.font.Font(os.path.join("..","graphics","PublicPixel.ttf"), 25)
+        self.font = pygame.font.Font(self.pixel_font, 25)
         
         self.text1 = self.font.render("A D, ← → MOVE", True, WHITE)
         self.text_rect1 = self.text1.get_rect(center = (WINDOW_WIDTH/2, 175))
@@ -224,7 +227,7 @@ class Main:
         self.display_surface.fill(BG_COLOR)
         self.show_game_over_menu = True
 
-        self.font = pygame.font.Font(os.path.join("..","graphics","PublicPixel.ttf"), 35)
+        self.font = pygame.font.Font(self.pixel_font, 35)
         self.text = self.font.render(f"SCORE:{self.game.final_score}", True, WHITE)
         self.text_rect = self.text.get_rect(center = (WINDOW_WIDTH/2, 185))
 
