@@ -9,6 +9,8 @@ GAME_HEIGHT =  ROWS * CELL_SIZE # 700
 
 FPS = 120
 
+RUNNING = True
+
 # buttons
 BUTTON_WIDTH = 300
 BUTTON_HEIGHT = 75
@@ -34,6 +36,7 @@ PREVIEW_BLOCK_OFFSET = pygame.Vector2(COLS * 1.5, 30)
 # Colors 
 WHITE = (255, 255, 255)
 
+# pieces colors
 YELLOW = (241, 230, 13)
 RED = (229, 27, 32)
 BLUE = (14, 113, 237)
@@ -47,8 +50,6 @@ DARK_GREEN = (9, 107, 28)
 DARK_RED = (153, 14, 32)
 PINK = (247, 30, 222)
 
-
-GRAY = "#1C1C1C"
 LINE_COLOR = (20, 20,50)
 BG_COLOR = (0,0,0)
 
@@ -63,7 +64,7 @@ PIECES = {
 	"Z": {"shape": [(0,0), (1,0), (0,-1), (-1,-1)], "color": PURPLE},
     "C": {"shape": [(0,0), (-1,0), (-1,-1), (1,0), (1,-1)], "color": LIGHT_GREEN},
     "q": {"shape": [(0,0), (-1,0), (1,0), (0,-1),(1,-1)], "color": DARK_RED},
-    "P": {"shape": [(0,0), (-1,0), (1,0), (0,-1),(-1,-1)], "color": DARK_GREEN},
+    "P": {"shape": [(0,0), (-1,0), (1,0), (0,-1),(-1,-1)], "color": ORANGE},
     "DOT": {"shape": [(0,0)], "color": DARK_GREEN},
     "PLUS": {"shape": [(0,0), (-1,0), (1,0), (0,1), (0,-1)], "color": BROWN}
 }
