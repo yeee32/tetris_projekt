@@ -5,7 +5,7 @@ import os
 
 class Game:
     def __init__(self, get_next_shape, update_score, game_over_check):
-
+        pygame.mixer.init()
         self.surface = pygame.Surface((GAME_WIDTH, GAME_HEIGHT))
         self.display_surface = pygame.display.get_surface()
         self.rect = self.surface.get_rect(topleft = (PADDING,PADDING))
@@ -16,17 +16,16 @@ class Game:
         self.drop_speed = 1
 
         # sound effects
-        self.clear_row_sound = pygame.mixer.Sound(os.path.join("Maturitni_projekt", "sfx","clear_row_sound.wav"))
-        self.block_place_sound = pygame.mixer.Sound(os.path.join("Maturitni_projekt", "sfx","block_place_sound.wav"))
-        self.game_over_sound = pygame.mixer.Sound(os.path.join("Maturitni_projekt", "sfx","game_over_sound.wav"))
+        self.clear_row_sound = pygame.mixer.Sound(os.path.join("..", "sfx","clear_row_sound.wav"))
+        self.game_over_sound = pygame.mixer.Sound(os.path.join("..", "sfx","game_over_sound.wav"))
 
+        # funcs
         self.get_next_shape = get_next_shape
         self.update_score = update_score
         self.field_data = [[0 for x in range(COLS)] for y in range(ROWS)]
         # create random starting piece
         self.shape = random.choice(list(PIECES.keys()))
         self.piece = Piece(self.shape, self.sprites, self.spawn_new_piece, self.field_data)
-        print(self.shape)
 
         # timer
         self.timers = {
@@ -37,23 +36,27 @@ class Game:
 
         self.timers["vertical_move"].activate()
 
+        # preview info
         self.curr_level = 1
         self.curr_score = 0
         self.curr_lines_cleared = 0 
 
-    def score_calc(self,  lines_cleared):
-        self.curr_lines_cleared += lines_cleared
-        self.curr_score += SCORE_DATA[lines_cleared] * self.curr_level
 
-        # for every 10 lines cleared the level will increase by 1
+    # function that calculates the score based on the amount of lines cleared
+    def score_calc(self,  lines_cleared):
+        self.curr_lines_cleared += lines_cleared # number of lines cleared 
+        self.curr_score += SCORE_DATA[lines_cleared] * self.curr_level # checks how much should the score change
+
+        # for every 10 lines cleared the level will increase by 1 and drop speed by 0.25
         if self.curr_lines_cleared / 10 > self.curr_level :
             self.curr_level += 1
             self.drop_speed += 0.25
-        self.update_score(self.curr_lines_cleared, self.curr_score, self.curr_level)
+        self.update_score(self.curr_lines_cleared, self.curr_score, self.curr_level) # puts on display
 
+    # function that creates the piece and puts it in the game window
     def spawn_new_piece(self):
-        self.block_place_sound.play()
-        self.game_over()
+        
+        self.game_over() 
         self.check_clear_rows()
 
         self.shape = self.get_next_shape()
@@ -84,7 +87,6 @@ class Game:
             if all(row):
                 cleared_rows.append(i)
         if cleared_rows:
-            
             for clear_row_index in cleared_rows:
                 # delete the block
                 for block in self.field_data[clear_row_index]:
@@ -94,7 +96,7 @@ class Game:
                     for block in row:
                         if block and block.position.y < clear_row_index:
                             block.position.y += 1
-            
+        
             self.field_data = [[0 for x in range(COLS)] for y in range(ROWS)]
             for block in self.sprites:
                 self.field_data[int(block.position.y)][int(block.position.x)] = block
@@ -202,7 +204,9 @@ class Piece:
         # create a block for each positon in block pos
         self.blocks = [Block(group, position, self.block_color, BLOCK_OFFSET) for position in self.block_pos]
     
-        self.rotate_sound = pygame.mixer.Sound(os.path.join("Maturitni_projekt", "sfx","rotate_sound.wav"))
+        # sound effects
+        self.block_place_sound = pygame.mixer.Sound(os.path.join("..", "sfx","block_place_sound.wav"))    
+        self.rotate_sound = pygame.mixer.Sound(os.path.join("..", "sfx","rotate_sound.wav"))
         self.rotate_sound.set_volume(0.25)
 
     # collisions
@@ -229,6 +233,7 @@ class Piece:
             self.field_data[int(block.position.y)][int(block.position.x)] = block
 
         self.spawn_new_piece()
+        self.block_place_sound.play()
     def move_down(self):
         if not self.down_collision_on_next_move(self.blocks, 1):
             for block in self.blocks:
@@ -237,6 +242,7 @@ class Piece:
             for block in self.blocks:
                 self.field_data[int(block.position.y)][int(block.position.x)] = block
             self.spawn_new_piece()
+            self.block_place_sound.play()
 
     def move_horizontaly(self, amount):
         if not self.horizontal_collision_on_next_move(self.blocks, amount):
