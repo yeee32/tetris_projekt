@@ -56,7 +56,7 @@ class Game:
     # function that creates the piece and puts it in the game window
     def spawn_new_piece(self):
         
-        self.game_over() 
+        self.game_over() # checks if the game has ended, if not, spawns another piece
         self.check_clear_rows()
 
         self.shape = self.get_next_shape()
