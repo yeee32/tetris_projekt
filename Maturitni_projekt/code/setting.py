@@ -31,10 +31,10 @@ PLAYER_MOVE_WAIT_TIME = 100
 ROTATE_WAIT_TIME = 225
 BLOCK_OFFSET = pygame.Vector2(COLS // 2, -1)
 
-PREVIEW_BLOCK_OFFSET = pygame.Vector2(COLS * 1.5, 30)
-
 # Colors 
 WHITE = (255, 255, 255)
+LINE_COLOR = (20, 20,50)
+BG_COLOR = (0,0,0)
 
 # pieces colors
 YELLOW = (241, 230, 13)
@@ -50,8 +50,6 @@ DARK_GREEN = (9, 107, 28)
 DARK_RED = (153, 14, 32)
 PINK = (247, 30, 222)
 
-LINE_COLOR = (20, 20,50)
-BG_COLOR = (0,0,0)
 
 # shapes
 PIECES = {
