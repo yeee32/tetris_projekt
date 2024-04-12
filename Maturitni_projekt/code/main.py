@@ -49,7 +49,6 @@ class Main:
         self.score.curr_score = curr_score
         self.score.level = level     
 
-
     # generates three random pieces and append them to a list
     def get_next_shape(self):
         next_shape = self.next_pieces.pop(0)
