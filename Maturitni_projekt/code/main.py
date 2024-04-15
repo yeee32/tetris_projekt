@@ -27,6 +27,7 @@ class Main:
         self.music = os.path.join("..", "sfx", "game_music.wav")
         self.main_menu_music = os.path.join("..", "sfx", "main_menu_music.wav")
         self.game_over_music = os.path.join("..", "sfx", "game_over_music.wav")
+        self.mute_music = False
 
         # backgrounds
         self.background_image = pygame.image.load(os.path.join("..", "graphics", "backgrounds", "background.png"))
@@ -40,6 +41,10 @@ class Main:
         self.continue_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons", "continue.png" ))
         self.menu_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "menu_button.png" ))
         self.option_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "options_button_img.png" ))
+
+        # sound on/off icons
+        self.sound_on_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "sound_on.png"))
+        self.sound_off_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "sound_mute.png"))
 
         # fonts
         self.pixel_font = os.path.join("..", "graphics", "fonts", "PublicPixel.ttf")
@@ -76,21 +81,38 @@ class Main:
             self.display_surface.fill(BG_COLOR)
             self.display_surface.blit(self.game_background_image, (0,0))
 
+            self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
+
             self.display_surface.blit(self.text1, self.text_rect1)
             self.display_surface.blit(self.text2, self.text_rect2)
             self.display_surface.blit(self.text3, self.text_rect3)
             self.display_surface.blit(self.text4, self.text_rect4)
             
-            self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
-            self.back_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 475, BUTTON_WIDTH, BUTTON_HEIGHT)
+            self.back_button = self.menu_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 512.5))
+
+            if self.mute_music == True:
+                self.sound_button = self.sound_on_img.get_rect(center = ((WINDOW_WIDTH)/2, 425))
+            else:
+                self.sound_button = self.sound_off_img.get_rect(center = ((WINDOW_WIDTH)/2, 425))
 
             if self.option_button.collidepoint((self.mouse_x, self.mouse_y)):
                 if click == True:
                     main.main_menu()
+            if self.sound_button.collidepoint((self.mouse_x, self.mouse_y)):
+                if click == True and self.mute_music == False:
+                    self.mute_music = True
+                    print("music off")
+                elif click == True and self.mute_music == True:
+                    self.mute_music = False
+                    print("music on")
 
-            pygame.draw.rect(self.display_surface, YELLOW, self.option_button)
+            self.display_surface.blit(self.menu_button_img, self.back_button)
+            if self.mute_music == True:
+                self.display_surface.blit(self.sound_off_img, self.sound_button)
+            else:
+                self.display_surface.blit(self.sound_on_img, self.sound_button)
 
-            self.display_surface.blit(self.menu_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 475))
+            
             click = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -99,6 +121,10 @@ class Main:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         main.main_menu()
+                    if event.key == pygame.K_m and self.mute_music == False:
+                        self.mute_music = True
+                    elif event.key == pygame.K_m and self.mute_music == True:
+                        self.mute_music = False
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         click = True
@@ -108,8 +134,9 @@ class Main:
 
     def main_menu(self):
         click = False
-        pygame.mixer.music.load(self.main_menu_music)
-        pygame.mixer.music.play(-1)
+        if not self.mute_music:
+            pygame.mixer.music.load(self.main_menu_music)
+            pygame.mixer.music.play(-1)
         pygame.display.set_caption("MAIN MENU")
         while RUNNING:
             self.display_surface.fill((BG_COLOR))
@@ -117,14 +144,15 @@ class Main:
             self.display_surface.blit(self.background_image, (0,0))
             self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
 
-            self.start_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 225, BUTTON_WIDTH, BUTTON_HEIGHT)
-            self.quit_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 350, BUTTON_WIDTH, BUTTON_HEIGHT)
-            self.option_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 475, BUTTON_WIDTH, BUTTON_HEIGHT)
+            self.start_button = self.start_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 265))
+            self.quit_button = self.quit_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 390))
+            self.option_button = self.option_button_img.get_rect(center= ((WINDOW_WIDTH)/2, 515))
 
             if self.start_button.collidepoint((self.mouse_x, self.mouse_y)):
                 if click == True:
-                    pygame.mixer.music.load(self.music)
-                    pygame.mixer.music.play(-1)
+                    if not self.mute_music:
+                        pygame.mixer.music.load(self.music)
+                        pygame.mixer.music.play(-1)
                     main.run()
             if self.quit_button.collidepoint((self.mouse_x, self.mouse_y)):
                 if click == True:
@@ -135,28 +163,24 @@ class Main:
                     pygame.mixer.music.stop()
                     main.option_menu()
 
-            pygame.draw.rect(self.display_surface, RED, self.start_button)
-            pygame.draw.rect(self.display_surface, GREEN, self.quit_button)
-            pygame.draw.rect(self.display_surface, YELLOW, self.option_button)
-
-            self.display_surface.blit(self.start_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 225))
-            self.display_surface.blit(self.quit_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 350))
-            self.display_surface.blit(self.option_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 475))
+            self.display_surface.blit(self.start_button_img, self.start_button)
+            self.display_surface.blit(self.quit_button_img, self.quit_button)
+            self.display_surface.blit(self.option_button_img, self.option_button)
             click = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     
                     pygame.quit()
                     sys.exit()
-
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         
                         pygame.quit()
                         sys.exit()
                     if event.key == pygame.K_RETURN: # enter
-                        pygame.mixer.music.load(self.music)
-                        pygame.mixer.music.play(-1)
+                        if not self.mute_music:
+                            pygame.mixer.music.load(self.music)
+                            pygame.mixer.music.play(-1)
                         main.run()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
@@ -176,9 +200,9 @@ class Main:
             self.display_surface.blit(self.pause_menu_image, (0,0))
             self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
 
-            self.continue_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 225, BUTTON_WIDTH, BUTTON_HEIGHT)
-            self.main_menu_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 350, BUTTON_WIDTH, BUTTON_HEIGHT)
-            self.quit_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 475, BUTTON_WIDTH, BUTTON_HEIGHT)
+            self.continue_button = self.continue_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 265))
+            self.main_menu_button = self.menu_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 390))
+            self.quit_button = self.quit_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 515))
             
             if self.continue_button.collidepoint((self.mouse_x, self.mouse_y)):
                 if click == True:
@@ -197,13 +221,9 @@ class Main:
                     pygame.quit()
                     sys.exit()
 
-            pygame.draw.rect(self.display_surface, RED, self.continue_button)
-            pygame.draw.rect(self.display_surface, BLUE, self.main_menu_button)
-            pygame.draw.rect(self.display_surface, GREEN, self.quit_button)
-
-            self.display_surface.blit(self.continue_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 225))
-            self.display_surface.blit(self.menu_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 350))
-            self.display_surface.blit(self.quit_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 475))
+            self.display_surface.blit(self.continue_button_img, self.continue_button)
+            self.display_surface.blit(self.menu_button_img, self.main_menu_button)
+            self.display_surface.blit(self.quit_button_img, self.quit_button)
             click = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -221,8 +241,9 @@ class Main:
     
     def game_over_menu(self):
         click = False
-        pygame.mixer.music.load(self.game_over_music)
-        pygame.mixer.music.play(-1)
+        if not self.mute_music:
+            pygame.mixer.music.load(self.game_over_music)
+            pygame.mixer.music.play(-1)
         self.display_surface.fill(BG_COLOR)
         self.show_game_over_menu = True
 
@@ -237,8 +258,8 @@ class Main:
             self.display_surface.blit(self.text, self.text_rect)
             self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
 
-            self.main_menu_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 225, BUTTON_WIDTH, BUTTON_HEIGHT)
-            self.quit_button = pygame.Rect((WINDOW_WIDTH - BUTTON_WIDTH)/2, 350, BUTTON_WIDTH, BUTTON_HEIGHT)
+            self.main_menu_button = self.menu_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 265))
+            self.quit_button = self.quit_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 390))
 
             if self.main_menu_button.collidepoint((self.mouse_x, self.mouse_y)):
                 if click == True:
@@ -248,11 +269,8 @@ class Main:
                 if click == True:
                     pygame.quit()
                     sys.exit()
-
-            pygame.draw.rect(self.display_surface, RED, self.start_button)
-            pygame.draw.rect(self.display_surface, GREEN, self.quit_button)
-            self.display_surface.blit(self.menu_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 225))
-            self.display_surface.blit(self.quit_button_img, ((WINDOW_WIDTH - BUTTON_WIDTH)/2, 350))
+            self.display_surface.blit(self.menu_button_img, self.main_menu_button)
+            self.display_surface.blit(self.quit_button_img, self.quit_button)
             click = False
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
