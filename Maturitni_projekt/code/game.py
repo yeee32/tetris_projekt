@@ -41,9 +41,8 @@ class Game:
         self.curr_score = 0
         self.curr_lines_cleared = 0 
 
-
     # function that calculates the score based on the amount of lines cleared
-    def score_calc(self,  lines_cleared):
+    def update_preview(self,  lines_cleared):
         self.curr_lines_cleared += lines_cleared # number of lines cleared 
         self.curr_score += SCORE_DATA[lines_cleared] * self.curr_level # checks how much should the score change
 
@@ -103,7 +102,7 @@ class Game:
 
             self.clear_row_sound.play()
              # update score
-            self.score_calc(len(cleared_rows))
+            self.update_preview(len(cleared_rows))
         
     def player_input(self):
         keys = pygame.key.get_pressed()
