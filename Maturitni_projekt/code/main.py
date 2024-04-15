@@ -24,7 +24,7 @@ class Main:
         self.preview = Preview()
         
         # music
-        self.music = os.path.join("..", "sfx", "shitty_music.wav")
+        self.music = os.path.join("..", "sfx", "game_music.wav")
         self.main_menu_music = os.path.join("..", "sfx", "main_menu_music.wav")
         self.game_over_music = os.path.join("..", "sfx", "game_over_music.wav")
 
