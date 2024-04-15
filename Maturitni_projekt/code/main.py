@@ -35,6 +35,9 @@ class Main:
         self.game_background_image = pygame.image.load(os.path.join("..", "graphics", "backgrounds", "game_bg.png"))
         self.pause_menu_image = pygame.image.load(os.path.join("..", "graphics", "backgrounds", "pause_menu.png"))
         
+        # icon
+        self.icon_img = pygame.image.load(os.path.join("..", "graphics", "backgrounds", "icon.png"))
+
         # buttons
         self.start_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "start_buton.png"))
         self.quit_button_img = pygame.image.load(os.path.join("..", "graphics", "buttons",  "quit_button.png"))
@@ -48,6 +51,8 @@ class Main:
 
         # fonts
         self.pixel_font = os.path.join("..", "graphics", "fonts", "PublicPixel.ttf")
+
+        pygame.display.set_icon(self.icon_img)
 
     def update_score(self, lines, curr_score, level):
         self.score.lines = lines
@@ -131,6 +136,7 @@ class Main:
         if not self.mute_music:
             pygame.mixer.music.load(self.main_menu_music)
             pygame.mixer.music.play(-1)
+
         pygame.display.set_caption("MAIN MENU")
         while RUNNING:
             self.display_surface.fill((BG_COLOR))
@@ -185,7 +191,6 @@ class Main:
 
     def pause_menu(self):
         click = False
-        self.mute_music = False
         pygame.mixer.music.pause()
         self.display_surface.fill(BG_COLOR)
         pygame.display.set_caption("PAUSE")
