@@ -127,7 +127,7 @@ class Game:
         if self.timers["rotate"].is_active == False:
 
             if keys[pygame.K_UP] or keys[pygame.K_w]:
-                self.piece.rotate()
+                self.piece.rotate_piece()
                 
                 self.timers["rotate"].activate()
 
@@ -248,7 +248,7 @@ class Piece:
             for block in self.blocks:
                 block.position.x += amount
     
-    def rotate(self):
+    def rotate_piece(self):
         if self.shape not in ["O", "DOT", "PLUS"]:
             pivot_point = self.blocks[0].position
             
