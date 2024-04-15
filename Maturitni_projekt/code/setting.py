@@ -11,10 +11,6 @@ FPS = 120
 
 RUNNING = True
 
-# buttons
-BUTTON_WIDTH = 300
-BUTTON_HEIGHT = 75
-
 # side bar size 
 SIDEBAR_WIDTH = 200 
 PREVIEW_HEIGHT = 0.7
@@ -49,7 +45,6 @@ GREEN = (21, 230, 28)
 DARK_GREEN = (9, 107, 28)
 DARK_RED = (153, 14, 32)
 PINK = (247, 30, 222)
-
 
 # shapes
 PIECES = {
