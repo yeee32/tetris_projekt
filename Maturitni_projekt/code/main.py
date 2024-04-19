@@ -93,7 +93,7 @@ class Main:
             self.display_surface.blit(self.text3, self.text_rect3)
             self.display_surface.blit(self.text4, self.text_rect4)
             
-            self.back_button = self.menu_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 512.5))
+            self.back_button = self.menu_button_img.get_rect(center = ((WINDOW_WIDTH)/2, 515))
             self.sound_button = self.sound_off_img.get_rect(center = ((WINDOW_WIDTH)/2, 415))
 
             if self.back_button.collidepoint((self.mouse_x, self.mouse_y)):
