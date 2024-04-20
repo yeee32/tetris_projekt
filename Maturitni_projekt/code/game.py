@@ -287,9 +287,9 @@ class Block(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = (x, y))
 
     def horizontal_collision(self, x_pos, field_data):
-        if not 0 <= x_pos < COLS:
+        if x_pos >= COLS or x_pos < 0:
             return True
-        
+
         if field_data[int(self.position.y)][x_pos]:
             return True
 
