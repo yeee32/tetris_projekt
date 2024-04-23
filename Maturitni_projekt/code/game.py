@@ -53,8 +53,7 @@ class Game:
         self.update_score(self.curr_lines_cleared, self.curr_score, self.curr_level) # puts on display
 
     # function that creates the piece and puts it in the game window
-    def spawn_new_piece(self):
-        
+    def spawn_new_piece(self):    
         self.game_over() # checks if the game has ended, if not, spawns another piece
         self.check_clear_rows()
 
@@ -137,7 +136,6 @@ class Game:
             self.drop_speed_multiplier = self.drop_speed # reset to normal drop speed
 
     def run(self):
-
         # update the timer
         self.timers["vertical_move"].duration = MOVE_DOWN_SPEED_WAIT // self.drop_speed_multiplier
         self.timer_update()
@@ -173,7 +171,6 @@ class Game:
         # reset next shape
         self.shape = random.choice(list(PIECES.keys()))
         self.piece = Piece(self.shape, self.sprites, self.spawn_new_piece, self.field_data)
-        
 
         # generate new random shapes for next pieces preview
         self.next_pieces = [random.choice(list(PIECES.keys())) for shape in range(3)]
